@@ -1,0 +1,213 @@
+/* ===== GLOBAL PAGE SETUP ===== */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* ✅ Disable scrolling */
+    font-family: 'Poppins', sans-serif;
+    background: #000;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== NAVBAR ===== */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 60px;
+    background: #1b1b1b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #ffffff;
+}
+
+.nav-links {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 20px;
+    transition: 0.3s ease;
+}
+
+.nav-links a:hover {
+    background: #e60012;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(230, 0, 18, 0.4);
+    transform: translateY(-1px);
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    height: 100%;
+    margin-top: 70px; /* space for fixed navbar */
+    margin-bottom: 60px; /* space for footer */
+}
+
+/* ===== HERO CARD ===== */
+.card {
+    width: 100%;
+    height: calc(100vh - 130px); /* full height minus nav & footer */
+    background: url("../image/background.jpg") center/cover no-repeat;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: none;
+}
+
+/* Dark overlay */
+.card .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 0;
+}
+
+/* ===== CARD NAVIGATION ===== */
+.nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    padding-top: 40px;
+    position: relative;
+    z-index: 2;
+}
+
+.nav ul {
+    list-style: none;
+    display: flex;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav ul li {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.nav ul li:hover {
+    color: #e60012;
+}
+
+/* ===== CARD CONTENT ===== */
+.content {
+    position: relative;
+    z-index: 2;
+    padding: 80px;
+}
+
+.content h1 {
+    font-size: 72px;
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+.product-info {
+    margin-top: 40px;
+}
+
+.product-info h2 {
+    font-size: 44px;
+    margin: 0;
+    color: #e60012;
+    text-transform: uppercase;
+}
+
+.product-info h3 {
+    font-size: 22px;
+    margin-top: 12px;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+/* ===== BUTTON ===== */
+.buy-btn {
+    margin-top: 25px;
+    padding: 16px 42px;
+    background: #e60012;
+    border: none;
+    border-radius: 40px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(230, 0, 18, 0.4);
+}
+
+.buy-btn:hover {
+    background: #b8000f;
+    transform: translateY(-3px);
+}
+
+/* ===== FOOTER ===== */
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 -4px 10px #00000080;
+    z-index: 5;
+}
+
+footer h2 {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0;
+}
+
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    nav {
+        flex-direction: column;
+        padding: 15px 20px;
+        gap: 10px;
+    }
+
+    .content {
+        padding: 40px 20px;
+        text-align: center;
+    }
+
+    .content h1 {
+        font-size: 50px;
+    }
+
+    .product-info h2 {
+        font-size: 32px;
+    }
+}

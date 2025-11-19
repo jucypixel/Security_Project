@@ -1,0 +1,276 @@
+/* Global Setup */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(145deg, #111, #000);
+    color: #fff;
+}
+
+/* Navbar */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 60px;
+    background: #1b1b1b;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 22px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 20px;
+    transition: 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    background: #e60012;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* Main Content */
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url("../image/background.jpg") center/cover no-repeat;
+    position: relative;
+}
+
+.main-content::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75); /* darker overlay */
+}
+
+/* Login Container */
+.container {
+    position: relative;
+    z-index: 1;
+    width: 380px;
+    padding: 40px 35px;
+    background: rgba(20, 20, 20, 0.85); /* darker box */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    text-align: center;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+}
+
+/* Input Groups */
+.input-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 18px 14px 50px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #000000;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    border: 2px solid #fffdfe;
+}
+
+.input-group i {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #e60012;
+    font-size: 18px;
+}
+
+/* Toggle Password Icon */
+.input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-box input {
+  width: 100%;
+  padding: 12px 40px 12px 40px;
+  border: 2px solid #b30000;
+  border-radius: 12px;
+  background-color: #000;
+  color: #fff;
+  outline: none;
+  font-size: 16px;
+}
+
+.input-box .icon {
+  position: absolute;
+  left: 12px;
+  color: #b30000;
+  font-size: 18px;
+}
+
+.input-box .toggle-password {
+  position: absolute;
+  right: 12px;
+  color: #fff; /* White eye icon */
+  font-size: 18px;
+  cursor: pointer;
+
+}
+
+
+/* Show Password */
+.show-password {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: -10px 0 20px;
+    font-size: 13px;
+    color: #bbb;
+}
+
+.show-password input {
+    cursor: pointer;
+}
+
+/* Button */
+.btn {
+    width: 100%;
+    padding: 14px;
+    background: #e60012;
+    border: none;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #b8000f;
+    transform: translateY(-2px);
+}
+
+.btn:disabled {
+    background: #444;
+    color: #bbb;
+    cursor: not-allowed;
+}
+
+/* Lockout timer */
+#lockout-timer {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #e60012;
+}
+
+/* Links */
+.links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.links a:hover {
+    color: #e60012;
+}
+
+.links a.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Error Message */
+.error-message {
+    background: rgba(230, 0, 18, 0.15);
+    border: 1px solid #e60012;
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+/* Footer */
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+footer h2 {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* Responsive */
+@media (max-width: 420px) {
+    .container {
+        width: 90%;
+        padding: 30px 20px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .links {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

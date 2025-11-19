@@ -1,0 +1,435 @@
+/* === GLOBAL RESET === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+ /* Ensure page is not scrollable */
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .main-content {
+            overflow: hidden;
+        }
+        
+        .container {
+            height: calc(102vh - 90px - 80px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+/* === NAVBAR === */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 60px;
+    background: #1b1b1b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* === LOGO === */
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #ffffff;
+}
+
+/* === NAV LINKS === */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 20px;
+    transition: 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a:focus {
+    background: #e60012;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(230, 0, 18, 0.4);
+    transform: translateY(-1px);
+}
+
+/* === MAIN CONTENT === */
+.main-content {
+    height: 100vh;
+    padding: 90px 0 80px;
+    width: 100%;
+    background: url("../image/background.jpg") center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+    overflow: hidden;
+}
+
+.main-content::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 0;
+}
+
+/* === FORM CONTAINER === */
+.container {
+    position: relative;
+    z-index: 1;
+    background-color: rgba(42, 42, 42, 0.92);
+    width: 90%;
+    max-width: 900px;
+    height: calc(100vh - 90px - 80px);
+    padding: 20px 28px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* === TITLES === */
+.title,
+.form-title {
+    display: block;
+    text-align: center;
+    margin: 0 auto 10px;
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #e60012;
+    width: fit-content;
+    padding: 2px 15px 6px;
+    flex-shrink: 0;
+}
+
+.form-title {
+    margin-bottom: 8px;
+}
+
+h2 {
+    text-align: center;
+    font-weight: 600;
+    color: #e60012;
+    margin-bottom: 8px;
+    font-size: 16px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+/* === STEP INDICATOR === */
+.step-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 10px 0 12px;
+    padding: 0 15px;
+    flex-shrink: 0;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 150px;
+}
+
+.step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: #fff;
+    background-color: #333;
+    border: 2px solid #555;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-number {
+    background-color: #e60012;
+    border-color: #ffffff;
+    box-shadow: 0 0 10px rgba(230, 0, 18, 0.5);
+}
+
+.step.completed .step-number {
+    background-color: #e60012;
+    border-color: #ffffff;
+}
+
+.step-label {
+    font-size: 9px;
+    color: #ccc;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.step.active .step-label {
+    color: #e60012;
+    font-weight: 600;
+}
+
+/* === FORM STRUCTURE === */
+.form-section {
+    padding: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.two-column-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 15px;
+    width: 100%;
+    margin-bottom: 8px;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 0 0 auto;
+}
+
+/* === LABELS === */
+label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 12px;
+    color: #ffffff;
+    font-weight: 500;
+    margin-bottom: 1px;
+}
+
+label .optional {
+    color: #888;
+    font-style: italic;
+    font-weight: 400;
+    margin-left: 4px;
+}
+
+label .required {
+    color: #e60012;
+    margin-left: 4px;
+    font-weight: bold;
+}
+
+/* === OPTIONAL PLACEHOLDER COLOR === */
+input::placeholder {
+    color: #888;
+}
+
+input[placeholder*="Optional"]::placeholder {
+    color: #e60012;
+    font-style: italic;
+}
+
+.error-message {
+    color: #e60012;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+input.invalid, select.invalid {
+    border-color: #e60012 !important;
+}
+
+/* === INPUTS & SELECT === */
+input,
+select {
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 12px;
+    transition: 0.3s;
+    margin-top: 2px;
+    height: 3em;
+}
+
+/* Password wrapper for toggle functionality */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+    margin-top: 2px;
+}
+
+.password-wrapper input {
+    margin-top: 0;
+    padding-right: 40px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    -webkit-user-select: none;
+    user-select: none;
+    z-index: 10;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #e60012;
+    box-shadow: 0 0 6px rgba(230, 0, 18, 0.5);
+}
+
+/* === BUTTON CONTAINER === */
+.button-container,
+.button-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 8px;
+    margin-bottom: 0;
+    padding: 8px 0;
+    flex-shrink: 0;
+}
+
+.button-container button,
+.button-wrapper button {
+    min-width: 100px;
+    padding: 8px 24px;
+    font-size: 14px;
+}
+
+.back-btn {
+    background-color: #e60012 !important;
+}
+
+.back-btn:hover {
+    background-color: #e60012 !important;
+}
+
+.next-btn {
+    background-color: #e60012 !important;
+}
+
+#passwordStrength {
+    text-align: left;
+    display: block;
+    margin-top: 5px;
+}
+
+#passwordStrength {
+    font-size: 12px;
+}
+
+
+
+/* === BUTTON === */
+button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    background-color: #e60012;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 12px rgba(230, 0, 18, 0.4);
+}
+
+button:hover {
+    background-color: #b8000f;
+    transform: translateY(-3px);
+}
+
+/* === FOOTER === */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #000;
+    padding: 16px 0;
+    box-shadow: 0 -4px 10px #00000080;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+footer h2 {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    label {
+        justify-content: flex-start;
+    }
+
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+}

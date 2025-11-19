@@ -2,114 +2,146 @@
 session_start();
 include("connection.php");
 
-// ✅ Step 1: Verify session
-if (!isset($_SESSION['verify_id_number'])) {
-    echo "<script>
-        alert('No verification found. Please go through Forgot Password first.');
-        window.location='forgot.php';
-    </script>";
-    exit;
+// -------------------------------------------
+// GET ID NUMBER FROM ACCOUNT STEP
+// -------------------------------------------
+$id_number = $_SESSION['generated_id_number'] ?? null;
+
+if (!$id_number) {
+    die("ERROR: Missing ID number. Please complete Account Information first.");
 }
 
-$id_number = $_SESSION['verify_id_number'];
+// -------------------------------------------
+// FIXED QUESTION LIST
+// -------------------------------------------
+$questions = [
+    "What is your mother's maiden name?",
+    "What was the name of your first pet?",
+    "What city were you born in?"
+];
 
-// ✅ Step 2: Get user_id using id_number
-$getUserIdQuery = "SELECT user_id FROM users WHERE id_number = ?";
-$stmt = $conn->prepare($getUserIdQuery);
-$stmt->bind_param("s", $id_number);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows === 0) {
-    echo "<script>alert('User not found.'); window.location='forgot.php';</script>";
-    exit;
-}
-
-$user = $result->fetch_assoc();
-$user_id = $user['user_id'];
-
-// ✅ Step 3: Fetch the security questions linked to this user
-// (Make sure your 'authentication' table uses user_id, not id_number)
-$qQuery = "SELECT question1, question2, question3 FROM authentication WHERE user_id = ?";
-$qStmt = $conn->prepare($qQuery);
-$qStmt->bind_param("i", $user_id);
-$qStmt->execute();
-$qResult = $qStmt->get_result();
-
-if ($qResult->num_rows === 1) {
-    $questions = $qResult->fetch_assoc();
-} else {
-    echo "<script>
-        alert('No security questions found for this account.');
-        window.location='forgot.php';
-    </script>";
-    exit;
-}
-
-// ✅ Step 4: Verify the user's answers
+// -------------------------------------------
+// FORM SUBMISSION
+// -------------------------------------------
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $answer1 = strtolower(trim($_POST['answer1']));
-    $answer2 = strtolower(trim($_POST['answer2']));
-    $answer3 = strtolower(trim($_POST['answer3']));
 
-    // Fetch the stored answers
-    $ansQuery = "SELECT answer1, answer2, answer3 FROM user_authentication WHERE user_id = ?";
-    $ansStmt = $conn->prepare($ansQuery);
-    $ansStmt->bind_param("i", $user_id);
-    $ansStmt->execute();
-    $ansResult = $ansStmt->get_result();
+    $answer1 = trim($_POST['answer1']);
+    $answer2 = trim($_POST['answer2']);
+    $answer3 = trim($_POST['answer3']);
 
-    if ($ansResult->num_rows === 1) {
-        $correct = $ansResult->fetch_assoc();
+    if (empty($answer1) || empty($answer2) || empty($answer3)) {
+        echo "<script>alert('Please answer all questions.');</script>";
+        exit;
+    }
 
-        if (
-            $answer1 === strtolower($correct['answer1']) &&
-            $answer2 === strtolower($correct['answer2']) &&
-            $answer3 === strtolower($correct['answer3'])
-        ) {
-            // ✅ All correct — allow reset
-            $_SESSION['reset_user_id'] = $user_id;
-            echo "<script>
-                alert('Verification successful! You may now reset your password.');
-                window.location='reset.php';
-            </script>";
-            exit;
-        } else {
-            echo "<script>alert('One or more answers are incorrect. Please try again.');</script>";
-        }
+    // -------------------------------------------
+    // INSERT SECURITY QUESTIONS (USING id_number FK)
+    // -------------------------------------------
+    $sql = "INSERT INTO users_security 
+            (id_number, question1, answer1, question2, answer2, question3, answer3)
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param(
+        "sssssss",
+        $id_number,
+        $questions[0], $answer1,
+        $questions[1], $answer2,
+        $questions[2], $answer3
+    );
+
+    if ($stmt->execute()) {
+
+        // CLEAN UP SESSION
+        unset($_SESSION['generated_id_number']);
+
+        echo "<script>
+                alert('Account Created Successfully!');
+                window.location='login.php';
+              </script>";
+        exit;
+
     } else {
-        echo "<script>alert('Answer records not found for this user. Please set up your answers first.');</script>";
+        echo "Database Error: " . $stmt->error;
     }
 }
 ?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Security Verification | KickZone</title>
-    <link rel="stylesheet" href="forgot.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Questions | Registration</title>
+    <link rel="stylesheet" href="css/sec_ques.css">
+    
 </head>
 <body>
-<div class="container">
-    <h1>Security Verification</h1>
-    <p>Answer the following security questions to verify your account.</p>
+    <nav>
+        <div class="logo">Casablanca</div>
+        <div class="nav-links">
+            <a href="home.php">Home</a>
+            <a href="login.php">Login</a>
+        </div>
+    </nav>
 
-    <form method="POST">
-        <div class="input-group">
-            <label><?= htmlspecialchars($questions['question1']); ?></label>
-            <input type="text" name="answer1" required>
-        </div>
-        <div class="input-group">
-            <label><?= htmlspecialchars($questions['question2']); ?></label>
-            <input type="text" name="answer2" required>
-        </div>
-        <div class="input-group">
-            <label><?= htmlspecialchars($questions['question3']); ?></label>
-            <input type="text" name="answer3" required>
-        </div>
+    <main class="main-content">
+        <div class="container">
+            <h1 class="form-title">SIGN UP</h1>
 
-        <button type="submit" class="btn">Submit Answers</button>
-    </form>
-</div>
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step completed">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Personal Details</div>
+                </div>
+                <div class="step completed">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Address & Login</div>
+                </div>
+                <div class="step active">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Questions</div>
+                </div>
+            </div>
+
+            <form class="form1" id="securityQuestionsForm" method="POST" action="">
+                <div class="form-section">
+                    <h2>Security Questions</h2>
+
+                    <div class="single-column-form">
+                        <?php
+                        $count = 1;
+                        foreach ($questions as $q):
+                            if (!empty($q)):
+                        ?>
+                        <div class="form-group">
+                            <label for="answer<?= $count ?>"><?= $count . ". " . htmlspecialchars($q) ?> <span class="required">*</span></label>
+                            <input type="text" id="answer<?= $count ?>" name="answer<?= $count ?>" placeholder="Enter your answer" required>
+                            <span class="error-message" id="answer<?= $count ?>-error"></span>
+                        </div>
+                        <?php
+                            $count++;
+                            endif;
+                        endforeach;
+                        ?>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="button" onclick="window.location.href='account.php'" class="back-btn">BACK</button>
+                        <button type="submit" name="submit" class="next-btn">SUBMIT</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <h2>&copy; 2025 Casablanca. All rights reserved.</h2>
+    </footer>
 </body>
 </html>
+

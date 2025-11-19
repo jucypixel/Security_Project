@@ -1,96 +1,82 @@
 <?php
-include("connection.php");
 session_start();
+include("connection.php");
 
-// Check if user just registered
-if (!isset($_SESSION['user_id'])) {
-    echo "<script>
-        alert('No active registration found. Please register first.');
-        window.location='registration.php';
-    </script>";
-    exit;
+// Skip authentication check for login page to prevent redirect loops
+$current_page = basename($_SERVER['PHP_SELF']);
+if ($current_page === 'login.php' || $current_page === 'personal.php') {
+    return; // Exit the authentication check for these pages
 }
 
-$user_id = $_SESSION['user_id'];
-
-//  Fetch the authentication questions (should be fixed to the correct table)
-$query = "SELECT question1, question2, question3 FROM authentication LIMIT 1";
-$result = mysqli_query($conn, $query);
-
-$questions = [];
-if ($row = mysqli_fetch_assoc($result)) {
-    $questions = [$row['question1'], $row['question2'], $row['question3']];
+// Check if user is logged in
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
 }
 
-//  Default fallback questions
-if (empty($questions) || empty($questions[0])) {
-    $questions = [
-        "What is your favorite color?",
-        "What is your pet’s name?",
-        "Where were you born?"
-    ];
+// Verify user still exists in database and get current data
+$username = $_SESSION['username'];
+
+// Use the correct column names from your users_account table
+$stmt = $conn->prepare("SELECT account_id, id_number, username FROM users_account WHERE username = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows !== 1) {
+    // User no longer exists or session is invalid
+    session_unset();
+    session_destroy();
+    header("Location: login.php");
+    exit();
 }
 
-//  When the form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $answer1 = trim($_POST['answer1']);
-    $answer2 = trim($_POST['answer2']);
-    $answer3 = trim($_POST['answer3']);
+$user_data = $result->fetch_assoc();
 
-    // Check if user already has authentication set up
-  $check = $conn->prepare("SELECT * FROM user_authentication WHERE user_id = ?");
-    $check->bind_param("i", $user_id);
-    $check->execute();
-    $result_check = $check->get_result();
+// Store user data in session for use in other pages
+$_SESSION['account_id'] = $user_data['account_id']; // Primary key
+$_SESSION['id_number'] = $user_data['id_number'];   // ID number
+$_SESSION['username'] = $user_data['username'];
 
-    if ($result_check->num_rows > 0) {
-        echo "<script>
-            alert('You already set up authentication answers. Please log in instead.');
-            window.location='login.php';
-        </script>";
-        exit;
-    }
-
-    // Save authentication answers
-    $insert = $conn->prepare("INSERT INTO user_authentication (user_id, answer1, answer2, answer3) VALUES (?, ?, ?, ?)");
-    $insert->bind_param("isss", $user_id, $answer1, $answer2, $answer3);
-
-    if ($insert->execute()) {
-        unset($_SESSION['user_id']); // clear the session after setup
-        echo "<script>
-            alert('Authentication setup complete! You can now log in.');
-            window.location='login.php';
-        </script>";
-        exit;
-    } else {
-        echo "<script>alert('Error saving authentication data: " . addslashes($conn->error) . "');</script>";
-    }
-}
+$stmt->close();
+$conn->close();
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authentication | KickZone</title>
-    <link rel="stylesheet" href="authentication.css">
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <title>Authentication | Casablanca</title>
+    <link rel="stylesheet" href="css/authentication.css">
 </head>
 <body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="logo">Casablanca</div>
+        <nav>
+            <ul>
+                <li><a href="home.php">Home</a></li>
+                <li><a href="login.php" class="active">Login</a></li>
+                <li><a href="personal.php">Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>   
 
-    <!--  NAVBAR -->
-    <nav class="navbar">
-        <div class="logo">KickZone</div>
-    </nav>
+    <!-- Background -->
+    <div class="background">
+        <div class="overlay"></div>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <div class="forgot-container">
-            <h2 class="form-title">AUTHENTICATION</h2>
-            <p class="form-subtitle">Answer the questions below for verification</p>
-            <hr>
+        <div class="auth-container">
+            <h1>AUTHENTICATION</h1>
+            <p>Answer the questions below for verification</p>
 
-            <form method="POST" action="" class="auth-form">
+            <?php if (!empty($error_message)): ?>
+                <p class="error-message"><?= $error_message ?></p>
+            <?php endif; ?>
+
+            <form method="POST" action="">
                 <?php
                 $count = 1;
                 foreach ($questions as $q):
@@ -106,15 +92,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 endforeach;
                 ?>
 
-                <button type="submit" class="btn">Submit Answers</button>
+                <button type="submit" class="submit-btn">Submit</button>
             </form>
         </div>
-    </main>
+    </div>
 
-    <!-- FOOTER -->
     <footer>
-        <h2>&copy; 2025 KickZone. All rights reserved.</h2>
+        <p>© 2025 Casablanca. All rights reserved.</p>
     </footer>
-
 </body>
 </html>
+
+
